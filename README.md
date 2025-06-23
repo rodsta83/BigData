@@ -1,6 +1,7 @@
-# Материалы для серии обучающих уроков по Apache Ambari 3.0
+# Материалы для серии обучающих уроков по разворачиванию кластера Hadoop на основе пакета Apache Bigtop 3.0 средствами Apache Ambari 3.0
 
-Представлены материалы по сборке Apache Ambari 3.0, Apache BigTop 3.0, подготовка RPM-пакетов для установки Apache Ambari 3.0, Apache Bigtop 3.0 на кластере Hadoop.
+Представлены материалы по сборке из исходного кода Apache Ambari 3.0, Apache BigTop 3.0, подготовка RPM-пакетов для установки Apache Ambari 3.0, Apache Bigtop 3.0 на кластере Hadoop.
+А также последовательная установка кластера Hadoop средствами Apache Ambari 3.0. Настройка мониторинга кластера Hadoop используя REST API Ambari 3.0 
 
 * **[Ambari 3.0 step-by-step](Bigtop)** - установка кластера Hadoop средствами Apache Ambari 3.0 шаг за шагом.
     * **[Подготовка Build-машины: Настройка окружения](Bigtop/3.0/build_ambari.md)** - Подготовка окружения для сборки Ambari 3.0 из исходников
