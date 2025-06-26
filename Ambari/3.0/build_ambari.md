@@ -1,7 +1,8 @@
 # Сборка Apache Ambari 3.0 через maven. Создание RPM-пакетов
 
 
-Сборка Ambari и создание RPM пакетов:
+Сборка Ambari и создание RPM пакетов:  
+Текущая активаня версия java должна быть версии 17
 
 ```shell
 mvn -B -T 2C clean install package rpm:rpm \
