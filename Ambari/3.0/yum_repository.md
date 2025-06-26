@@ -1,6 +1,7 @@
 ## Локальный YUM репозиторий(хранилище RPM пакетов)
 
-Установим зависимости  
+Локальный репозиторий поставим на билд машину.
+Нам понадобятся следующие пакеты createrepo и nginx: 
 
 ```shell
 dnf install createrepo nginx -y
@@ -15,6 +16,9 @@ dnf install createrepo nginx -y
 Создаем папки для хранения RPM пакетов:
 
 ```shell
+mkdir -p /var/www/html
+mkdir -p /var/www/html/rocky8
+mkdir -p /var/www/html/rocky9
 chmod -R 755 /var/www/html
 chown -R nginx:nginx /var/www/html
 createrepo /var/www/html/rocky8/
