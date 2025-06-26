@@ -47,6 +47,22 @@ source /etc/profile.d/maven.sh
 mvn -version
 ```
 
+Проверка установленных версий java:
+
+```shell
+alternatives --config java
+```
+Вывод должны получить следующий:
+
+```shell
+There are 2 programs which provide 'java'.
+
+  Selection    Command
+-----------------------------------------------
+*+ 1           java-17-openjdk.x86_64 (/usr/lib/jvm/java-17-openjdk-17.0.15.0.6-3.el9.x86_64/bin/java)
+   2           java-1.8.0-openjdk.x86_64 (/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.452.b09-3.el9.x86_64/jre/bin/java)
+```
+
 Установка ядра python3:
 
 ```shell
