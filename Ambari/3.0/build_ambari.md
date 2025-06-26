@@ -89,7 +89,7 @@ mvn -B clean install package rpm:rpm \
 ```
 
 2. Возможны сетевые блокировки к внешним репозиториям maven: ```Connect to repository.apache.org:443 failed: Connect timed out```
-Тогда добавьте зеркало в settings.xml  
+В этом случае добавьте зеркало в settings.xml  
 Это решит проблемы доступа к основным репозиториям
 
 ```
