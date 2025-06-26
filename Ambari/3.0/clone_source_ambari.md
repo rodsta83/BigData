@@ -3,7 +3,7 @@
 ### Клонирование репозитория Ambari с GitHub:
 
 ```shell
-git clone git@github.com:apache/ambari.git
+git clone https://github.com/apache/ambari.git
 cd ambari
 ```
 
