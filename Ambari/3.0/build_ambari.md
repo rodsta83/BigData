@@ -44,6 +44,34 @@ Ambari Server:
 ```
 ambari/ambari-server/target/rpm/ambari-server/RPMS/x86_64/ambari-server-3.0.0.0-SNAPSHOT.x86_64.rpm
 ```
+
+Результат успешной сборки вы увидите в консоли:
+
+```
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for Ambari Main 3.0.0.0.0:
+[INFO]
+[INFO] Ambari Main ........................................ SUCCESS [ 33.962 s]
+[INFO] Apache Ambari Project POM .......................... SUCCESS [  0.160 s]
+[INFO] Ambari Web ......................................... SUCCESS [03:33 min]
+[INFO] Ambari Views ....................................... SUCCESS [ 15.568 s]
+[INFO] Ambari Admin View .................................. SUCCESS [ 20.345 s]
+[INFO] ambari-utility ..................................... SUCCESS [07:57 min]
+[INFO] Ambari Server SPI .................................. SUCCESS [  1.019 s]
+[INFO] Ambari Service Advisor ............................. SUCCESS [  1.795 s]
+[INFO] Ambari Server ...................................... SUCCESS [  01:19 h]
+[INFO] Ambari Functional Tests ............................ SUCCESS [ 52.022 s]
+[INFO] Ambari Agent ....................................... SUCCESS [08:52 min]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:41 h
+[INFO] Finished at: 2025-06-26T18:29:27+03:00
+[INFO] ------------------------------------------------------------------------
+```
+
+
+
 Возможные проблемы:
 
 1. Если в процессе сборки вы получили ошибку failed: Could not acquire lock(s) , такая ошибка может возникать при параллельной сборке.
