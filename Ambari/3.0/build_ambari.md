@@ -44,3 +44,30 @@ Ambari Server:
 ```
 ambari/ambari-server/target/rpm/ambari-server/RPMS/x86_64/ambari-server-3.0.0.0-SNAPSHOT.x86_64.rpm
 ```
+Возможные проблемы:
+
+1. Если в процессе сборки вы получили ошибку failed: Could not acquire lock(s) , такая ошибка может возникать при параллельной сборке.
+Тогда рекомендуется из команды ```mvn -B -T 2C``` , убрать параметр ```-T 2C``` - отвечающий за многопоточную сборку.
+
+Тогда выполните команду:
+
+```shell
+mvn -B clean install package rpm:rpm \
+-Drat.skip=true \
+-DskipTests \
+-Dmaven.test.skip=true \
+-Dfindbugs.skip=true \
+-Dcheckstyle.skip=true
+```
+
+2. Возможны сетевые блокировки к внешним репозиториям maven: ```Connect to repository.apache.org:443 failed: Connect timed out```
+Тогда добавьте зеркало в settings.xml 
+
+```
+<mirror>
+  <id>central-mirror</id>
+  <name>Central Mirror</name>
+  <url>https://repo1.maven.org/maven2/</url>
+  <mirrorOf>central</mirrorOf>
+</mirror>
+```
