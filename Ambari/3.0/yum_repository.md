@@ -24,7 +24,8 @@ systemctl disable firewalld
 
 
 Создаем папки для хранения RPM пакетов.  
-Мы сделаем две папки ambari_repo и rocky8 - в этой папке мы будем хранить компоненты BigTop 3.0 собранные под rocky linux 8.X
+Мы сделаем две папки ambari_repo  и rocky8 - в этой папке мы будем хранить компоненты BigTop 3.0 собранные под rocky linux 8.X
+В папке ambari_repo создадим подпапку ambari-3.0 в нее скопируем собранные RPM пакеты сервера и агента ambari.
 
 ```shell
 mkdir -p /var/www/html
@@ -34,8 +35,8 @@ mkdir -p /var/www/html/rocky8
 chmod -R 755 /var/www/html
 chown -R nginx:nginx /var/www/html
 createrepo /var/www/html/
-cp /opt/ambari_server_3_0/ambari/ambari-agent/target/rpm/ambari-agent/RPMS/x86_64/*.rpm /var/www/html/ambari_repo/
-cp /opt/ambari_server_3_0/ambari/ambari-server/target/rpm/ambari-server/RPMS/x86_64/*.rpm /var/www/html/ambari_repo/
+cp /opt/ambari_server_3_0/ambari/ambari-agent/target/rpm/ambari-agent/RPMS/x86_64/*.rpm /var/www/html/ambari_repo/ambari-3.0
+cp /opt/ambari_server_3_0/ambari/ambari-server/target/rpm/ambari-server/RPMS/x86_64/*.rpm /var/www/html/ambari_repo/ambari-3.0
 createrepo --update /var/www/html/
 ```
 
