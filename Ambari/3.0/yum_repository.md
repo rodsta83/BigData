@@ -29,6 +29,7 @@ systemctl disable firewalld
 ```shell
 mkdir -p /var/www/html
 mkdir -p /var/www/html/ambari_repo
+mkdir -p /var/www/html/ambari_repo/ambari-3.0
 mkdir -p /var/www/html/rocky8
 chmod -R 755 /var/www/html
 chown -R nginx:nginx /var/www/html
@@ -65,4 +66,13 @@ nginx -t
 systemctl status nginx
 systemctl start nginx
 systemctl enable nginx
+```
+Пробуем по http обратиться в браузере к ропозиторию ```http://bigdata-builder/```
+
+В браузере вы должны увидеть RPM пакеты собранных ambari-server и ambari-agent:
+
+```
+ambari-3.0/                                        27-Jun-2025 08:09      
+        ambari-agent-3.0.0.0-0.x86_64.rpm                  27-Jun-2025 07:03            35358426
+        ambari-server-3.0.0.0-0.x86_64.rpm                 27-Jun-2025 07:04           138640049
 ```
