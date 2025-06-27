@@ -13,19 +13,32 @@ dnf install createrepo nginx -y
 dnf install createrepo nginx -y
 ```
 
-Создаем папки для хранения RPM пакетов:
+Для целей разработки и тестирования рекомендуется отключить firewall и selinux:  
+
+```shell
+systemctl stop firewalld
+systemctl disable firewalld
+```
+
+Откройте на редактирование nano ```/etc/selinux/config``` и установите параметр ```SELINUX=disabled```
+
+
+Создаем папки для хранения RPM пакетов.  
+Мы сделаем две папки ambari_repo и rocky8 - в этой папке мы будем хранить компоненты BigTop 3.0 собранные под rocky linux 8.X
 
 ```shell
 mkdir -p /var/www/html
+mkdir -p /var/www/html/ambari_repo
 mkdir -p /var/www/html/rocky8
-mkdir -p /var/www/html/rocky9
 chmod -R 755 /var/www/html
 chown -R nginx:nginx /var/www/html
-createrepo /var/www/html/rocky8/
-createrepo --update /var/www/html/rocky8/
+createrepo /var/www/html/
+cp /opt/ambari_server_3_0/ambari/ambari-agent/target/rpm/ambari-agent/RPMS/x86_64/*.rpm /var/www/html/ambari_repo/
+cp /opt/ambari_server_3_0/ambari/ambari-server/target/rpm/ambari-server/RPMS/x86_64/*.rpm /var/www/html/ambari_repo/
+createrepo --update /var/www/html/
 ```
 
-Готовим конфиг nginx  ```/etc/nginx/conf.d/bigdata-builder.conf```:
+Готовим конфиг nginx  ```/etc/nginx/conf.d/ambari_repo.conf```:
 
 ```
 server {
@@ -33,7 +46,7 @@ server {
     server_name  bigdata-builder;
 
     location / {
-        root   /var/www/html/rocky8;
+        root   /var/www/html/ambari_repo;
         autoindex on;
         index  index.html index.htm;
         default_type text/html;
