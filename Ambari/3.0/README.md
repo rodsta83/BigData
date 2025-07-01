@@ -22,4 +22,5 @@ Apache Ambari — проект для упрощения управления Ha
 * [Клонирование исходного кода Apache Ambari 3.0](clone_source_ambari.md).
 * [Сборка Apache Ambari 3.0 через maven. Создание RPM-пакетов](build_ambari.md).
 * [Поднимаем локальный YUM-репозиторий RPM-пакетов](yum_repository.md).
+* [Тестирование установки RPM-пакетов Ambari 3.0 в среде Docker](docker_test_ambari.md).
 
