@@ -8,5 +8,6 @@
     * **[Клонирование исходного кода Apache Ambari 3.0](Ambari/3.0/clone_source_ambari.md)** - Клонирование исходного кода
     * **[Сборка Apache Ambari 3.0 через maven. Создание RPM-пакетов](Ambari/3.0/build_ambari.md)** - Сборка Ambari 3.0, подготовка RPM-пакетов для установки.
     * **[Поднимаем локальный YUM-репозиторий RPM-пакетов](Ambari/3.0/yum_repository.md)** - Подготовка YUM-репозитория для раскатывания Ambari 3.0 в кластере Hadoop.
+    * **[Тестирование установки RPM-пакетов Ambari 3.0 в среде Docker](Ambari/3.0/docker_test_ambari.md). - Тестирование установки Ambari 3.0 из собранных RPM-пакетов
 
 
