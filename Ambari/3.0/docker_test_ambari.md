@@ -153,6 +153,44 @@ services:
       - ./conf/hosts:/etc/hosts
 ```
 
+## Установите необходимые пакеты на все контейнеры
+
+Подготовим файл init.sh в нем разместим команды по установке необходимых зависиомстей.
+
+```shell
+#!/bin/bash
+
+# Проверка, были ли зависимости установлены ранее
+MARKER_FILE="/.dependencies_installed"
+if [[ ! -f $MARKER_FILE ]]; then
+    echo "Installing required dependencies..."
+    # Установка базовых утилит
+    dnf install -y sudo openssh-server openssh-clients which iproute net-tools less vim-enhanced
+    # Установка инструментов разработки
+    dnf install -y initscripts wget curl tar unzip git
+    # Включение репозитория PowerTools
+    dnf install -y dnf-plugins-core
+    dnf config-manager --set-enabled powertools
+    # Обновление системы
+    dnf update -y
+    # Создание маркера завершения установки
+    touch $MARKER_FILE
+    echo "Dependencies installed successfully!"
+fi
+
+# Запуск основной команды контейнера
+exec /sbin/init "$@"
+```
+
+Этот файл у нас вызывается для каждого контейнера в docker-compose.ymal:
+
+```
+volumes:
+- ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
+- ./conf/hosts:/etc/hosts
+- ./init.sh:/usr/local/bin/init.sh
+```
+
 ## Понимание образа BigTop
 
 Образ ```bigtop/puppet:trunk-rockylinux-8``` является частью проекта Apache BigTop, предоставляющего инфраструктуру для сборки и тестирования проектов, связанных с Hadoop. 
@@ -195,3 +233,56 @@ docker exec -it bigtop_hostname0 ping -c 2 bigtop_hostname3
 ```
 
 Эти команды проверяют доступность остальных узлов сети из узла ```bigtop_hostname0```.
+
+## Настройка доступа по SSH между контейнерами и отключите SELinux и брэндмауер на всех контейнерах
+
+Для этого подготовлен bash скрипт setup-ssh.sh , выполните его.
+
+```shell
+#!/bin/bash
+
+# Setup SSH for all containers
+docker exec -i bigtop_hostname0 bash << EOF
+    mkdir -p ~/.ssh
+    chmod 700 ~/.ssh
+    ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+    setenforce 0
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    systemctl enable sshd
+    systemctl start sshd
+    exit
+EOF
+
+docker exec -i bigtop_hostname1 bash << EOF
+    mkdir -p ~/.ssh
+    chmod 700 ~/.ssh
+    ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+    setenforce 0
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    systemctl enable sshd
+    systemctl start sshd
+    exit
+EOF
+
+docker exec -i bigtop_hostname2 bash << EOF
+    mkdir -p ~/.ssh
+    chmod 700 ~/.ssh
+    ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+    setenforce 0
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    systemctl enable sshd
+    systemctl start sshd
+    exit
+EOF
+
+docker exec -i bigtop_hostname3 bash << EOF
+    mkdir -p ~/.ssh
+    chmod 700 ~/.ssh
+    ssh-keygen -t rsa -N "" -f ~/.ssh/id_rsa
+    setenforce 0
+    sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    systemctl enable sshd
+    systemctl start sshd
+    exit
+EOF
+```

@@ -2,7 +2,8 @@ version: '3'
 
 services:
   bigtop_hostname0:
-    command: /sbin/init
+    container_name: bigtop_hostname0
+    command: /usr/local/bin/init.sh
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
@@ -11,34 +12,42 @@ services:
       - "8080:8080"
     privileged: true
     volumes:
-      - ./ambari-repo:/var/repo/ambari
-
+      - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
   bigtop_hostname1:
-    command: /sbin/init
+    container_name: bigtop_hostname1
+    command: /usr/local/bin/init.sh
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
     mem_swappiness: 0
     privileged: true
     volumes:
-      - ./ambari-repo:/var/repo/ambari
-
+      - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
   bigtop_hostname2:
-    command: /sbin/init
+    container_name: bigtop_hostname2
+    command: /usr/local/bin/init.sh
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
     mem_swappiness: 0
     privileged: true
     volumes:
-      - ./ambari-repo:/var/repo/ambari
-
+      - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
   bigtop_hostname3:
-    command: /sbin/init
+    container_name: bigtop_hostname3
+    command: /usr/local/bin/init.sh
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
     mem_swappiness: 0
     privileged: true
     volumes:
-      - ./ambari-repo:/var/repo/ambari
+      - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
+      - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
