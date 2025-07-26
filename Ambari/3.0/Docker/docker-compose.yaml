@@ -3,7 +3,7 @@ version: '3'
 services:
   bigtop_hostname0:
     container_name: bigtop_hostname0
-    command: /usr/local/bin/init.sh
+    command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
@@ -15,9 +15,13 @@ services:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
       - ./init.sh:/usr/local/bin/init.sh
+    networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.2
+
   bigtop_hostname1:
     container_name: bigtop_hostname1
-    command: /usr/local/bin/init.sh
+    command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
@@ -27,9 +31,13 @@ services:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
       - ./init.sh:/usr/local/bin/init.sh
+    networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.3
+
   bigtop_hostname2:
     container_name: bigtop_hostname2
-    command: /usr/local/bin/init.sh
+    command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
@@ -39,9 +47,13 @@ services:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
       - ./init.sh:/usr/local/bin/init.sh
+    networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.4
+
   bigtop_hostname3:
     container_name: bigtop_hostname3
-    command: /usr/local/bin/init.sh
+    command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
     mem_limit: 8g
@@ -51,3 +63,11 @@ services:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
       - ./init.sh:/usr/local/bin/init.sh
+    networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.5
+
+networks:
+  bigtop-network:
+    external: true
+    name: bigtop-network

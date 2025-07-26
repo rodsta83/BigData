@@ -127,6 +127,7 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.2
@@ -142,6 +143,7 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.3
@@ -157,6 +159,7 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.4
@@ -172,6 +175,7 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.5
