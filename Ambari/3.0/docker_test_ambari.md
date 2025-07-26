@@ -100,13 +100,22 @@ cat > conf/hosts << EOF
 172.20.0.5  bigtop_hostname3
 EOF
 ```
-Теперь обновите ваш файл docker-compose.yml, чтобы подключить этот файл hosts:
+##  Создаем обущую сеть docker
+
+Чтобы все контейнеры были в одной сети:
+
+```shell
+docker network create --subnet=172.20.0.0/24 --gateway=172.20.0.1 bigtop-network
+```
+
+Теперь обновите ваш файл docker-compose.yml, чтобы подключить этот файл hosts и указать общую сеть docker с флагом external:
 
 ```shell
 version: '3'
 
 services:
   bigtop_hostname0:
+    container_name: bigtop_hostname0
     command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
@@ -118,8 +127,12 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+	networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.2
 
   bigtop_hostname1:
+    container_name: bigtop_hostname1
     command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
@@ -129,8 +142,12 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+	networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.3
 
   bigtop_hostname2:
+    container_name: bigtop_hostname2
     command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
@@ -140,8 +157,12 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+	networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.4
 
   bigtop_hostname3:
+    container_name: bigtop_hostname3
     command: /sbin/init
     domainname: bigtop.apache.org
     image: bigtop/puppet:trunk-rockylinux-8
@@ -151,6 +172,14 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
+	networks:
+      bigtop-network:
+        ipv4_address: 172.20.0.5
+	  
+networks:
+  bigtop-network:
+    external: true
+    name: bigtop-network
 ```
 
 ## Установите необходимые пакеты на все контейнеры
