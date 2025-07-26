@@ -277,6 +277,14 @@ docker exec -it bigtop_hostname0 ping -c 2 bigtop_hostname3
 
 Эти команды проверяют доступность остальных узлов сети из узла ```bigtop_hostname0```.
 
+Вывод пинга будет таким:
+
+```shell
+PING bigtop_hostname2 (172.20.0.4) 56(84) bytes of data.
+64 bytes from bigtop_hostname2 (172.20.0.4): icmp_seq=1 ttl=64 time=0.136 ms
+64 bytes from bigtop_hostname2 (172.20.0.4): icmp_seq=2 ttl=64 time=0.069 ms
+```
+
 ## Настройка доступа по SSH между контейнерами и отключите SELinux и брэндмауер на всех контейнерах
 
 Для этого подготовлен bash скрипт setup-ssh.sh , выполните его.
