@@ -257,6 +257,16 @@ docker-compose up -d
 docker ps
 ```
 
+Вы должны увидеть такой вывод запущенных контейнеров:
+
+```
+CONTAINER ID   IMAGE                              COMMAND        CREATED         STATUS         PORTS                                         NAMES
+8e9ee43a47b9   bigtop/puppet:trunk-rockylinux-8   "/sbin/init"   7 minutes ago   Up 7 minutes                                                 bigtop_hostname2
+acf765e18ad6   bigtop/puppet:trunk-rockylinux-8   "/sbin/init"   7 minutes ago   Up 7 minutes                                                 bigtop_hostname3
+d93265df0a8e   bigtop/puppet:trunk-rockylinux-8   "/sbin/init"   7 minutes ago   Up 7 minutes   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp   bigtop_hostname0
+9e5512bb4eb3   bigtop/puppet:trunk-rockylinux-8   "/sbin/init"   7 minutes ago   Up 7 minutes                                                 bigtop_hostname1
+```
+
 ## Протестируйте сетевое соединение между контейнерами
 
 ```shell
