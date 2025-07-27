@@ -328,3 +328,20 @@ docker exec bigtop_hostname1 bash -c 'cat /tmp/host0_key.pub >> /root/.ssh/autho
 docker exec bigtop_hostname2 bash -c 'cat /tmp/host0_key.pub >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys'
 docker exec bigtop_hostname3 bash -c 'cat /tmp/host0_key.pub >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys'
 ```
+
+## Включите репозиторий разработки
+
+Для установки зависимостей, необходимых для Ambari, необходимо включить репозиторий разработки Rocky Linux в каждом контейнере bigtop_hostname0, bigtop_hostname1, bigtop_hostname2, bigtop_hostname3:
+
+```shell
+docker exec -it bigtop_hostname0 bash
+sed -i 's/^enabled=.*$/enabled=1/' /etc/yum.repos.d/Rocky-Devel.repo
+```
+
+Проверяем командой ```dnf repolist | grep devel```
+
+Должны увидеть результат:
+
+```
+devel Rocky Linux 8 - Devel WARNING! FOR BUILDROOT AND KOJI USE
+```
