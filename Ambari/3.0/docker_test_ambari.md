@@ -345,3 +345,10 @@ sed -i 's/^enabled=.*$/enabled=1/' /etc/yum.repos.d/Rocky-Devel.repo
 ```
 devel Rocky Linux 8 - Devel WARNING! FOR BUILDROOT AND KOJI USE
 ```
+
+## Дальнейшие действия
+Теперь, когда ваша среда Docker настроена, перейдите к руководству по установке, чтобы установить и настроить сервер Ambari и агенты. 
+Руководство по установке содержит стандартные инструкции, которые работают во всех средах (Vagrant, Docker и bare metal/KVM).
+
+Запустите настройку и установку сервера Ambari в контейнере bigtop_hostname0.
+Запустите установку агента Ambari в контейнерах bigtop_hostname1, bigtop_hostname2, bigtop_hostname3.
