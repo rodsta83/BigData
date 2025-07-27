@@ -261,7 +261,7 @@ PING bigtop_hostname2 (172.20.0.4) 56(84) bytes of data.
 
 ## Настройка доступа по SSH между контейнерами и отключите SELinux и брэндмауер на всех контейнерах
 
-Для этого подготовлен bash скрипт setup-ssh.sh , выполните его.
+Для этого подготовлен bash скрипт setup-ssh.sh , выполните его ```bash setup-ssh.sh```.
 
 ```shell
 #!/bin/bash
