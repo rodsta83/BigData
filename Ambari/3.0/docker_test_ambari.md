@@ -75,9 +75,9 @@ services:
 
 Эта конфигурация создает четыре контейнера:
 
-```bigtop\_hostname0```: узел сервера Ambari с открытым портом 8080.
+```bigtop_hostname0```: узел сервера Ambari с открытым портом 8080.
 
-```bigtop\_hostname1, bigtop\_hostname2, bigtop\_hostname3```: узлы агентов Ambari.
+```bigtop_hostname1, bigtop_hostname2, bigtop_hostname3```: узлы агентов Ambari.
 
 Каждый контейнер использует образ ```bigtop/puppet:trunk-rockylinux-8```, предварительно настроенный с большинством зависимостей, необходимых для сервисов Ambari и Hadoop.
 
@@ -127,7 +127,6 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
-      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.2
@@ -143,7 +142,6 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
-      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.3
@@ -159,7 +157,6 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
-      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.4
@@ -175,7 +172,6 @@ services:
     volumes:
       - ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
       - ./conf/hosts:/etc/hosts
-      - ./init.sh:/usr/local/bin/init.sh
     networks:
       bigtop-network:
         ipv4_address: 172.20.0.5
@@ -183,45 +179,7 @@ services:
 networks:
   bigtop-network:
     external: true
-    name: bigtop-network
-```
-
-## Установите необходимые пакеты на все контейнеры
-
-Подготовим файл init.sh в нем разместим команды по установке необходимых зависиомстей.
-
-```shell
-#!/bin/bash
-
-# Проверка, были ли зависимости установлены ранее
-MARKER_FILE="/.dependencies_installed"
-if [[ ! -f $MARKER_FILE ]]; then
-    echo "Installing required dependencies..."
-    # Установка базовых утилит
-    dnf install -y sudo openssh-server openssh-clients which iproute net-tools less vim-enhanced
-    # Установка инструментов разработки
-    dnf install -y initscripts wget curl tar unzip git
-    # Включение репозитория PowerTools
-    dnf install -y dnf-plugins-core
-    dnf config-manager --set-enabled powertools
-    # Обновление системы
-    dnf update -y
-    # Создание маркера завершения установки
-    touch $MARKER_FILE
-    echo "Dependencies installed successfully!"
-fi
-
-# Запуск основной команды контейнера
-exec /sbin/init "$@"
-```
-
-Этот файл у нас вызывается для каждого контейнера в docker-compose.ymal:
-
-```
-volumes:
-- ./var/www/html/ambari_repo/ambari-3.0:/var/repo/ambari
-- ./conf/hosts:/etc/hosts
-- ./init.sh:/usr/local/bin/init.sh
+    name: bigtop-networkr
 ```
 
 ## Понимание образа BigTop
@@ -265,6 +223,22 @@ CONTAINER ID   IMAGE                              COMMAND        CREATED        
 acf765e18ad6   bigtop/puppet:trunk-rockylinux-8   "/sbin/init"   7 minutes ago   Up 7 minutes                                                 bigtop_hostname3
 d93265df0a8e   bigtop/puppet:trunk-rockylinux-8   "/sbin/init"   7 minutes ago   Up 7 minutes   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp   bigtop_hostname0
 9e5512bb4eb3   bigtop/puppet:trunk-rockylinux-8   "/sbin/init"   7 minutes ago   Up 7 minutes                                                 bigtop_hostname1
+```
+
+## Установите необходимые пакеты на все контейнеры
+
+Заходим в каждый контейнер командой ```docker exec -it bigtop_hostname0 bash``` и устанавливаем дополнительные зависимости ниже:
+
+```shell
+    # Установка базовых утилит
+    dnf install -y sudo openssh-server openssh-clients which iproute net-tools less vim-enhanced
+    # Установка инструментов разработки
+    dnf install -y initscripts wget curl tar unzip git
+    # Включение репозитория PowerTools
+    dnf install -y dnf-plugins-core
+    dnf config-manager --set-enabled powertools
+    # Обновление системы
+    dnf update -y
 ```
 
 ## Протестируйте сетевое соединение между контейнерами
