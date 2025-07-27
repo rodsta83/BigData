@@ -66,4 +66,4 @@ services:
 networks:
   bigtop-network:
     external: true
-    name: bigtop-networkr
+    name: bigtop-network
