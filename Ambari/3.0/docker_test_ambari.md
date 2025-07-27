@@ -311,3 +311,20 @@ docker exec -i bigtop_hostname3 bash << EOF
     exit
 EOF
 ```
+
+## Скопировать SSH-ключ с сервера на агенты контейнеров bigtop_hostname1, bigtop_hostname2, bigtop_hostname3
+
+```shell
+# Извлекаем публичный ключ из контейнера bigtop_hostname0
+docker exec bigtop_hostname0 cat /root/.ssh/id_rsa.pub > /tmp/host0_key.pub
+
+# Копируем ключ в другие контейнеры
+docker cp /tmp/host0_key.pub bigtop_hostname1:/tmp/host0_key.pub
+docker cp /tmp/host0_key.pub bigtop_hostname2:/tmp/host0_key.pub
+docker cp /tmp/host0_key.pub bigtop_hostname3:/tmp/host0_key.pub
+
+# Добавляем ключ в authorized_keys каждого контейнера
+docker exec bigtop_hostname1 bash -c 'cat /tmp/host0_key.pub >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys'
+docker exec bigtop_hostname2 bash -c 'cat /tmp/host0_key.pub >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys'
+docker exec bigtop_hostname3 bash -c 'cat /tmp/host0_key.pub >> /root/.ssh/authorized_keys && chmod 600 /root/.ssh/authorized_keys'
+```
