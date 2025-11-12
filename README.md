@@ -9,5 +9,6 @@
     * **[Сборка Apache Ambari 3.0 через maven. Создание RPM-пакетов](Ambari/3.0/build_ambari.md)** - Сборка Ambari 3.0, подготовка RPM-пакетов для установки.
     * **[Поднимаем локальный YUM-репозиторий RPM-пакетов](Ambari/3.0/yum_repository.md)** - Подготовка YUM-репозитория для раскатывания Ambari 3.0 в кластере Hadoop.
     * **[Тестирование установки RPM-пакетов Ambari 3.0 в среде Docker](Ambari/3.0/docker_test_ambari.md)** - Тестирование установки Ambari 3.0 из собранных RPM-пакетов
+    * **[Установка Ambari Server 3.0 на хост машину с ОС rocky linux 9.0](Ambari/3.0/install_ambari.md)** - Подготовка Linux окружения, установка Ambari Server и Ambari Agent 
 
 
