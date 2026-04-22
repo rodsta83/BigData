@@ -1,10 +1,17 @@
+# Сброс в исходное состояние БД ambari
 
-
+1. Авторизоваться под пользователем postgres
+```shell
 su - postgres
+```
 
-[postgres@vmi471366 ~]$ psql
-psql (13.22)
-Type "help" for help.
+2. Войти в консоль psql
+
+```shell
+psql
+
+```
+3. Выполнить команду удаления БД ambari
 
 postgres=# DROP DATABASE IF EXISTS ambari;
 DROP DATABASE

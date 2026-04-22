@@ -1,7 +1,7 @@
 
 Ambari Server хранит ВСЁ своё состояние и метаданные кластера в базе данных.
 Это центральный репозиторий конфигураций, топологии, истории операций и пользователей.
-Ниже инструкция, гдре рассмотрим установку на примере postgresql
+Ниже инструкция, где рассмотрим установку на примере postgresql
 
 
 ## Установите PostgreSQL сервер
@@ -15,6 +15,7 @@ dnf install -y postgresql
 
 ```shell
 postgresql-setup --initdb
+#Вывод
 * Initializing database in '/var/lib/pgsql/data'
 * Initialized, logs are in /var/lib/pgsql/initdb_postgresql.log
 ```
@@ -32,7 +33,8 @@ systemctl status postgresql
 ```
 
 5. Конфигурирование PostgreSQL
-
+Активируйте параметр listen_addresses = '*'. Это означает, что сервер PostgreSQL теперь будет прослушивать запросы на всех сетевых интерфейсах сервера, а не только локально (`localhost`). 
+Это полезно, если вам нужно подключаться удалённо к вашему экземпляру PostgreSQL с другого компьютера или сети.
 ```shell
 sed -i "s/#listen_addresses = 'localhost'/listen_addresses = '*'/" /var/lib/pgsql/data/postgresql.conf
 ```
@@ -78,6 +80,32 @@ GRANT ALL PRIVILEGES ON DATABASE rangerkms TO rangerkms;
 CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'root';
 ```
 
+Вывести список баз для проверки:
+```shell
+postgres=# \l
+List of databases
+Name    |  Owner   | Encoding | Collate |  Ctype  |   Access privileges
+-----------+----------+----------+---------+---------+------------------------
+ambari    | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =Tc/postgres          +
+|          |          |         |         | postgres=CTc/postgres +
+|          |          |         |         | ambari=CTc/postgres
+hive      | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =Tc/postgres          +
+|          |          |         |         | postgres=CTc/postgres +
+|          |          |         |         | hive=CTc/postgres
+postgres  | postgres | UTF8     | C.UTF-8 | C.UTF-8 |
+ranger    | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =Tc/postgres          +
+|          |          |         |         | postgres=CTc/postgres +
+|          |          |         |         | ranger=CTc/postgres
+rangerkms | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =Tc/postgres          +
+|          |          |         |         | postgres=CTc/postgres +
+|          |          |         |         | rangerkms=CTc/postgres
+template0 | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =c/postgres           +
+|          |          |         |         | postgres=CTc/postgres
+template1 | postgres | UTF8     | C.UTF-8 | C.UTF-8 | =c/postgres           +
+|          |          |         |         | postgres=CTc/postgres
+(7 rows)
+```
+
 8. Сделать замену ident на md5
 ```shell
     sed -i 's/ident$/md5/' /var/lib/pgsql/data/pg_hba.conf
@@ -90,7 +118,23 @@ CREATE ROLE root WITH LOGIN SUPERUSER PASSWORD 'root';
 
 ## Подключаем репозиторий RPM
 
-1. Создаем конфигурационный файл *.repo с описанием репозитория
+1. Включите репозиторий разработки
+
+Для установки зависимостей, необходимых для Ambari, необходимо включить репозиторий разработки Rocky Linux:
+
+```shell
+sed -i 's/^enabled=.*$/enabled=1/' /etc/yum.repos.d/Rocky-Devel.repo
+```
+
+Проверяем командой ```dnf repolist | grep devel```
+
+Должны увидеть результат:
+
+```
+Rocky Linux 9 - Devel WARNING! FOR BUILDROOT ONLY DO NOT LEAVE ENABLED
+```
+
+2. Создаем конфигурационный файл *.repo с описанием репозитория
 
 ```shell
 cat > /etc/yum.repos.d/ambari_repo.repo << EOF
@@ -101,7 +145,7 @@ enabled = 1
 gpgcheck = 0
 EOF
 ```
-2. Проверьте работу репозитория:
+3. Проверьте работу репозитория:
 
 ```shell
 # Обновить кэш
@@ -117,20 +161,20 @@ yum makecache
 #Metadata cache created.
 ```
 
-3. Посмотреть все пакеты в репозитории ambari_repo
+4. Посмотреть все пакеты в репозитории ambari_repo
 
 ```shell
 yum --disablerepo="*" --enablerepo="ambari_repo" list available
 ```
 
-4. Или поискать конкретные пакеты
+5. Или поискать конкретные пакеты
 
 ```shell
 yum --disablerepo="*" --enablerepo="ambari_repo" search ambari
 yum --disablerepo="*" --enablerepo="ambari_repo" search hadoop
 ```
 
-5. Установите следующие пакеты на всех хостах:
+6. Установите следующие пакеты на всех хостах:
 
 ```shell
 # Установите необходимые зависимости.
@@ -150,6 +194,8 @@ yum install -y ambari-server
 
 2. Войти под su postgres и выполнить команду:
 ```shell
+su postgres
+
 PGPASSWORD='admin' psql -h localhost -p 5432 -U ambari -d ambari \
 -f /var/lib/ambari-server/resources/Ambari-DDL-Postgres-CREATE.sql
 ```
@@ -323,3 +369,29 @@ createrepo --update /opt/BigData/
 createrepo --update /opt/BigData/
 ```
 Теперь ваши клиенты смогут видеть обновленные версии пакетов при обращении к этому репозиторию.
+
+## Проверка установленных пакетов репозитория
+
+yum list installed | grep @BIGTOP-3.5.0*
+
+bigtop-groovy.noarch                           2.5.4-1.el9                      @BIGTOP-3.5.0-repo-1
+bigtop-jsvc.x86_64                             1.4.0-1.el9                      @BIGTOP-3.5.0-repo-1
+bigtop-select.noarch                           3.5.0-1.el9                      @BIGTOP-3.5.0-repo-1
+bigtop-utils.noarch                            3.5.0-1.el9                      @BIGTOP-3.5.0-repo-1
+hadoop_3_5_0.x86_64                            3.3.6-1.el9                      @BIGTOP-3.5.0-repo-1
+hadoop_3_5_0-client.x86_64                     3.3.6-1.el9                      @BIGTOP-3.5.0-repo-1
+hadoop_3_5_0-hdfs.x86_64                       3.3.6-1.el9                      @BIGTOP-3.5.0-repo-1
+hadoop_3_5_0-libhdfs.x86_64                    3.3.6-1.el9                      @BIGTOP-3.5.0-repo-1
+hadoop_3_5_0-mapreduce.x86_64                  3.3.6-1.el9                      @BIGTOP-3.5.0-repo-1
+hadoop_3_5_0-yarn.x86_64                       3.3.6-1.el9                      @BIGTOP-3.5.0-repo-1
+hbase_3_5_0.x86_64                             2.6.2-1.el9                      @BIGTOP-3.5.0-repo-1
+hive_3_5_0.noarch                              4.0.1-1.el9                      @BIGTOP-3.5.0-repo-1
+hive_3_5_0-hcatalog.noarch                     4.0.1-1.el9                      @BIGTOP-3.5.0-repo-1
+hive_3_5_0-jdbc.noarch                         4.0.1-1.el9                      @BIGTOP-3.5.0-repo-1
+hive_3_5_0-webhcat.noarch                      4.0.1-1.el9                      @BIGTOP-3.5.0-repo-1
+ranger_3_5_0-hbase-plugin.x86_64               2.7.0-1.el9                      @BIGTOP-3.5.0-repo-1
+ranger_3_5_0-hdfs-plugin.x86_64                2.7.0-1.el9                      @BIGTOP-3.5.0-repo-1
+ranger_3_5_0-hive-plugin.x86_64                2.7.0-1.el9                      @BIGTOP-3.5.0-repo-1
+ranger_3_5_0-yarn-plugin.x86_64                2.7.0-1.el9                      @BIGTOP-3.5.0-repo-1
+tez_3_5_0.noarch                               0.10.4-1.el9                     @BIGTOP-3.5.0-repo-1
+zookeeper_3_5_0.x86_64                         3.8.4-1.el9                      @BIGTOP-3.5.0-repo-1
